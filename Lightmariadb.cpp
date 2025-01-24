@@ -171,16 +171,17 @@ void ReadFromFile()
 }
 
 int main()
-{int choice;
-
+{
+    int choice;
+ // make user chooce between opening a file and creating a new file
+    do {
     cout << "Choose an option:\n";
     cout << "1. Read from a file\n";
     cout << "2. Create a new file\n";
     cout << "Enter your choice: ";
     cin >> choice;
 
-    // make user chooce between opening a file and creating a new file
-    do {
+   
         switch (choice)
         {
         case 1:
