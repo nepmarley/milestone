@@ -107,6 +107,8 @@ void Tabletofile()
     {
         cout << "Error creating the file.\n";
     }
+   
+
 }
 
 // Function to read the table from the file
@@ -169,8 +171,7 @@ void ReadFromFile()
 }
 
 int main()
-{
-    int choice;
+{int choice;
 
     cout << "Choose an option:\n";
     cout << "1. Read from a file\n";
@@ -178,18 +179,28 @@ int main()
     cout << "Enter your choice: ";
     cin >> choice;
 
-    switch (choice)
-    {
-    case 1:
-        ReadFromFile();
-        break;
-    case 2:
-        Tabletofile();
-        break;
-    default:
-        cout << "Invalid choice. Exiting program.\n";
-        break;
-    }
+
+    do {
+        switch (choice)
+        {
+        case 1:
+            ReadFromFile();
+            break;
+        case 2:
+            Tabletofile();
+            break;
+        default:
+            cout << "Invalid choice. Exiting program.\n";
+            break;
+        }
+
+            cin >> choice;
+
+        cout << "Do you want to continue? (1 - Yes, 2 - No): ";
+
+    } while (choice != 1 && choice != 2);
 
     return 0;
 }
+    
+
