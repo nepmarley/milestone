@@ -179,7 +179,7 @@ int main()
     cout << "Enter your choice: ";
     cin >> choice;
 
-
+    // make user chooce between opening a file and creating a new file
     do {
         switch (choice)
         {
