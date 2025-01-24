@@ -194,10 +194,11 @@ int main()
             break;
         }
 
-            cin >> choice;
+            
 
         cout << "Do you want to continue? (1 - Yes, 2 - No): ";
-
+        cin >> choice;
+        
     } while (choice != 1 && choice != 2);
 
     return 0;
