@@ -194,7 +194,7 @@ int main()
             cout << "Invalid choice. Exiting program.\n";
             break;
         }
-
+        cin.ignore();
             
 
         cout << "Do you want to continue? (1 - Yes, 2 - No): ";
