@@ -171,7 +171,8 @@ void ReadFromFile()
 }
 
 int main()
-{int choice;
+{
+    int choice;
 
     cout << "Choose an option:\n";
     cout << "1. Read from a file\n";
