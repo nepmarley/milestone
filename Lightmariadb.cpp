@@ -51,12 +51,16 @@ void updateTableRow(vector<string> &table, int numOfRows, int numOfCols)
     }
     colToUpdate--; // Convert to zero-indexed
 
+    // Calculate the index in the 1D table vector
+    int index = rowToUpdate * numOfCols + colToUpdate;
+
+    // Display the current value before updating
+    cout << "The current value at row " << rowToUpdate + 1 << ", column " << colToUpdate + 1 << " is: " << table[index] << endl;
+
     // Ask the user for the new value
     cout << "Enter the new value for row " << rowToUpdate + 1 << ", column " << colToUpdate + 1 << ": ";
     cin >> newValue;
 
-    // Calculate the index in the 1D table vector
-    int index = rowToUpdate * numOfCols + colToUpdate;
     table[index] = newValue;
 
     cout << "Row updated successfully!\n";
@@ -100,7 +104,6 @@ void deleteTableRow(vector<string> &table, int &numOfRows, int numOfCols)
     tableIndex(table, numOfRows, numOfCols);
 }
 
-// Function to write table to the file
 void Tabletofile()
 {
     ofstream outputFile;
@@ -110,23 +113,32 @@ void Tabletofile()
     int numOfRows = 0, numOfCols = 0;
     vector<string> table;
 
-    cout << "Enter the filename to create: ";
+    // Ask the user for the filename
+    cout << "=== Create a New File ===\n";
+    cout << "Enter the filename to create (e.g., data.csv): ";
     cin >> filename;
 
     outputFile.open(filename);
 
     if (outputFile)
     {
-        cout << "Enter the number of columns: ";
+        // Ask the user for the number of columns
+        cout << "\nHow many columns will the table have? ";
         cin >> cols;
         numOfCols = cols;
 
-        cout << "Enter data row by row. Type 'done' to finish.\n";
+        cout << "\nYou will now enter data row by row.\n";
+        cout << "Note:\n";
+        cout << "  - Enter values separated by commas (e.g., value1,value2,value3).\n";
+        cout << "  - Ensure the number of values matches the number of columns (" << cols << ").\n";
+        cout << "  - Type 'done' when you are finished entering data.\n\n";
+
         while (true)
         {
-            cout << "Enter row " << numOfRows + 1 << " (comma-separated values): ";
-            getline(cin >> ws, input); // 'ws' to consume any leading whitespace
+            cout << "Enter data for row " << numOfRows + 1 << ": ";
+            getline(cin >> ws, input); // 'ws' consumes any leading whitespace
 
+            // Check if the user wants to finish
             if (input == "done")
             {
                 break;
@@ -137,20 +149,22 @@ void Tabletofile()
             int currentCols = 0;
             vector<string> rowData;
 
-            // Read each word separated by comma
+            // Split the input by commas
             while (getline(ss, word, ','))
             {
                 rowData.push_back(word);
                 currentCols++;
             }
 
+            // Validate the number of columns in the input
             if (currentCols != cols)
             {
-                cout << "Incorrect number of columns. Expected " << cols << " columns.\n";
+                cout << "Error: You entered " << currentCols
+                     << " values, but " << cols << " are required. Please try again.\n";
                 continue;
             }
 
-            // Write to file
+            // Write the row to the file
             for (int i = 0; i < cols; ++i)
             {
                 outputFile << rowData[i];
@@ -161,7 +175,7 @@ void Tabletofile()
             }
             outputFile << "\n";
 
-            // Update table data
+            // Update the table data for later display
             for (const auto &item : rowData)
             {
                 table.push_back(item);
@@ -170,24 +184,24 @@ void Tabletofile()
             numOfRows++;
         }
 
+        // Close the file
         outputFile.close();
-        cout << "File created successfully with " << numOfRows << " rows and " << numOfCols << " columns.\n";
+        cout << "\nFile created successfully with " << numOfRows << " rows and " << numOfCols << " columns.\n";
 
         // Display the table
         if (!table.empty())
         {
-            cout << "\nDisplaying the table:\n";
+            cout << "\nHere is your table:\n";
             tableIndex(table, numOfRows, numOfCols);
         }
     }
     else
     {
-        cout << "Error creating the file.\n";
+        cout << "Error: Unable to create the file. Please check the filename or permissions.\n";
     }
-
 }
 
-void ReadFromFile() // Function to read the table from the file
+void ReadFromFile()
 {
     ifstream inputFile;
     string filename;
@@ -241,15 +255,15 @@ void ReadFromFile() // Function to read the table from the file
             cin >> updateChoice;
             if (tolower(updateChoice) == 'y')
             {
-                updateTableRow(table, numOfRows, numOfCols);  // Call the update function
+                updateTableRow(table, numOfRows, numOfCols);
             }
 
             char deleteChoice;
             cout << "Do you want to delete a row? (y/n): ";
             cin >> deleteChoice;
-            if (tolower (deleteChoice) == 'y')
+            if (tolower(deleteChoice) == 'y')
             {
-                deleteTableRow(table, numOfRows, numOfCols);  // Call the delete function
+                deleteTableRow(table, numOfRows, numOfCols);
             }
         }
 
@@ -264,14 +278,13 @@ void ReadFromFile() // Function to read the table from the file
 int main()
 {
     int choice;
- // make user chooce between opening a file and creating a new file
+    int continueChoice;
     do {
-    cout << "Choose an option:\n";
-    cout << "1. Read from a file\n";
-    cout << "2. Create a new file\n";
-    cout << "Enter your choice: ";
-    cin >> choice;
-
+        cout << "Choose an option:\n";
+        cout << "1. Read from a file\n";
+        cout << "2. Create a new file\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
 
         switch (choice)
         {
@@ -282,14 +295,14 @@ int main()
             Tabletofile();
             break;
         default:
-            cout << "Invalid choice. Exiting program.\n";
+            cout << "Invalid choice.\n";
             break;
         }
 
         cout << "Do you want to continue? (1 - Yes, 2 - No): ";
-        cin >> choice;
+        cin >> continueChoice;
 
-    } while (choice == 1 && choice != 2);
+    } while (continueChoice == 1);
 
     return 0;
 }
