@@ -9,11 +9,11 @@ using namespace std;
 // Function to display the table
 void tableIndex(const vector<string> &table, int Rows, int Cols)
 {
-    for (int row = 0; row < Rows; row++)
+    for (int i = 0; i < Rows; i++)
     {
-        for (int col = 0; col < Cols; col++)
+        for (int j = 0; j < Cols; j++)
         {
-            int index = row * Cols + col;
+            int index = i * Cols + j;
             if (index < table.size())
                 cout << setw(15) << table[index];
             else
