@@ -239,7 +239,7 @@ void ReadFromFile() // Function to read the table from the file
             char updateChoice;
             cout << "Do you want to update any row? (y/n): ";
             cin >> updateChoice;
-            if (updateChoice == 'y' || updateChoice == 'Y')
+            if (tolower(updateChoice) == 'y')
             {
                 updateTableRow(table, numOfRows, numOfCols);  // Call the update function
             }
@@ -247,7 +247,7 @@ void ReadFromFile() // Function to read the table from the file
             char deleteChoice;
             cout << "Do you want to delete a row? (y/n): ";
             cin >> deleteChoice;
-            if (deleteChoice == 'y' || deleteChoice == 'Y')
+            if (tolower (deleteChoice) == 'y')
             {
                 deleteTableRow(table, numOfRows, numOfCols);  // Call the delete function
             }
