@@ -15,7 +15,7 @@ void tableIndex(const vector<string> &table, int Rows, int Cols)
         {
             int index = i * Cols + j;
             if (index < table.size())
-                cout << setw(15) << table[index];
+                cout << setw(15) << table[index] << " | ";
             else
                 cout << setw(15) << ""; // Handle cases where the table might be incomplete
         }
@@ -25,7 +25,11 @@ void tableIndex(const vector<string> &table, int Rows, int Cols)
 
 void updateTableRow(vector<string> &table, int numOfRows, int numOfCols)
 {
-    int rowToUpdate, colToUpdate;
+    if (table.empty()) {
+    cout << "No data to update as the table is empty:/ \n";
+    return;
+}
+    int rowUpdate, colUpdate;
     string newValue;
 
     // Display the current table
@@ -34,29 +38,29 @@ void updateTableRow(vector<string> &table, int numOfRows, int numOfCols)
 
     // Ask the user which row and column they want to update
     cout << "Enter the row number to update (1 to " << numOfRows << "): ";
-    cin >> rowToUpdate;
-    if (rowToUpdate < 1 || rowToUpdate > numOfRows)
+    cin >> rowUpdate;
+    if (rowUpdate < 1 || rowUpdate > numOfRows)
     {
         cout << "Invalid row number.\n";
         return;
     }
-    rowToUpdate--; // Convert to zero-indexed
+    rowUpdate--; // Convert to zero-indexed
 
     cout << "Enter the column number to update (1 to " << numOfCols << "): ";
-    cin >> colToUpdate;
-    if (colToUpdate < 1 || colToUpdate > numOfCols)
+    cin >> colUpdate;
+    if (colUpdate < 1 || colUpdate > numOfCols)
     {
         cout << "Invalid column number.\n";
         return;
     }
-    colToUpdate--; // Convert to zero-indexed
+    colUpdate--; // Convert to zero-indexed
 
     // Ask the user for the new value
-    cout << "Enter the new value for row " << rowToUpdate + 1 << ", column " << colToUpdate + 1 << ": ";
+    cout << "Enter the new value for row " << rowUpdate + 1 << ", column " << colUpdate + 1 << ": ";
     cin >> newValue;
 
     // Calculate the index in the 1D table vector
-    int index = rowToUpdate * numOfCols + colToUpdate;
+    int index = rowUpdate * numOfCols + colUpdate;
     table[index] = newValue;
 
     cout << "Row updated successfully!\n";
@@ -68,7 +72,7 @@ void updateTableRow(vector<string> &table, int numOfRows, int numOfCols)
 
 void deleteTableRow(vector<string> &table, int &numOfRows, int numOfCols)
 {
-    int rowToDelete;
+    int rowDelete;
 
     // Display the current table
     cout << "Current table data:\n";
@@ -76,16 +80,16 @@ void deleteTableRow(vector<string> &table, int &numOfRows, int numOfCols)
 
     // Ask the user which row they want to delete
     cout << "Enter the row number to delete (1 to " << numOfRows << "): ";
-    cin >> rowToDelete;
-    if (rowToDelete < 1 || rowToDelete > numOfRows)
+    cin >> rowDelete;
+    if (rowDelete < 1 || rowDelete > numOfRows)
     {
         cout << "Invalid row number.\n";
         return;
     }
-    rowToDelete--; // Convert to zero-indexed
+    rowDelete--; // Convert to zero-indexed
 
     // Calculate the index of the first element in the row to delete
-    int startIdx = rowToDelete * numOfCols;
+    int startIdx = rowDelete * numOfCols;
 
     // Remove the elements from the table
     table.erase(table.begin() + startIdx, table.begin() + startIdx + numOfCols);
@@ -125,7 +129,8 @@ void Tabletofile()
         while (true)
         {
             cout << "Enter row " << numOfRows + 1 << " (comma-separated values): ";
-            getline(cin >> ws, input); // 'ws' to consume any leading whitespace
+            cin.ignore();
+            getline(cin, input); // 'ws' to consume any leading whitespace
 
             if (input == "done")
             {
@@ -289,7 +294,7 @@ int main()
         cout << "Do you want to continue? (1 - Yes, 2 - No): ";
         cin >> choice;
 
-    } while (choice == 1 && choice != 2);
+    } while (choice == 1);
 
     return 0;
 }
