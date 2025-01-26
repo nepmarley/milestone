@@ -152,7 +152,6 @@ void addRowsToTable() {
     while (true) {
         cout << "Enter row " << numOfRows + 1 << ": ";
         string input;
-        cin.ignore();  // clear input buffer
         getline(cin, input);
 
         if (input == "done") {  // Check for 'done' to stop row entry
