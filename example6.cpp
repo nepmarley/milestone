@@ -54,7 +54,7 @@ int main() {
         cin >> choice;
         cin.ignore(); //clear buffer as cin and getline are both used
 
-    } while (choice == 1); //runs as long as choice = 1
+    } while (choice == 1); //runs when choice = 1
 
     return 0;
 }
@@ -62,7 +62,7 @@ int main() {
 // Function to display the table
 void tableIndex(const vector<string> &table, int Rows, int Cols) {
     if (table.empty()) {
-        cout << "The table is empty.\n";
+        cout << "The table is empty.\n"; //return this message if table is empty
         return;
     }
 
@@ -77,7 +77,7 @@ void tableIndex(const vector<string> &table, int Rows, int Cols) {
 
 // Function to create a new table
 void createTable() {
-    table.clear(); //clears data
+    table.clear(); //clears data from table
     numOfRows = 0;
     numOfCols = 0;
 
@@ -94,7 +94,7 @@ void createTable() {
 
     // Add column names to the table
     while (getline(ss, columnName, ',')) {
-        table.push_back(columnName);
+        table.push_back(columnName); 
     }
 
     if (table.size() != numOfCols) {
