@@ -44,13 +44,13 @@ void writeOutputFile(const string& csvIn, const string& txtOut) {
 
     string line;
     while (getline(inputFile, line)) {
-        outputFile << line << endl;  // Write each line from CSV to text file
+        outputFile << line << endl;  
     }
 
     inputFile.close();
     outputFile.close();
 
-    cout << "CSV data successfully written to " << txtOut << endl;
+    cout << "CSV data is written to " << txtOut << endl;
 }
 
 int main() {
