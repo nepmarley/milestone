@@ -14,6 +14,7 @@ int numOfRows = 0, numOfCols = 0; // Tracks rows and columns for the table
 // Function declarations
 void tableIndex(const vector<string> &table, int Rows, int Cols);
 void createTable();
+void deleteRows();
 void addRowsToTable();
 void ReadFromFile();
 void processSQLCommand(const string &command);
@@ -221,7 +222,7 @@ void ReadFromFile() {
     }
 }
 
-// Function to process SQL-like commands
+// function to process the SQL-like commands
 void processSQLCommand(const string &command) {
     stringstream ss(command);
     string keyword, filename;
@@ -245,4 +246,45 @@ void processSQLCommand(const string &command) {
     } else {
         cout << "Error: Unknown command.\n";
     }
+}
+
+void deleteRows(const string &whereColumn, const string &whereValue) {
+    vector<string> updatedTable;
+    int columnIndex = -1; // flag 
+
+    // find index of column where condition will be applied
+    for (int i = 0; i < numOfCols; i++) {
+        if (table[i] == whereColumn) {
+            columnIndex = i;
+            break;
+        }
+    }
+
+    // if column not found output error and return
+    if (columnIndex == -1) {
+        cout << "Error: Column '" << whereColumn << "' not found.\n";
+        return;
+    }
+
+    for (int i = numOfCols; i < table.size(); i++) {
+        int rowIndex = (i - numOfCols) / numOfCols; // count row index
+        int colIndex = i % numOfCols; // count column index
+
+        // if column index matches and value matches condition skip row
+        if (colIndex == columnIndex && table[i] == whereValue) {
+            continue; 
+        }
+
+        // else keep item in updated table
+        updatedTable.push_back(table[i]);
+    }
+
+    // table is updated with the new data
+    table = updatedTable;
+
+    // recount number of rows using .size vector function
+    numOfRows = table.size() / numOfCols;
+
+    cout << "Rows deleted successfully where " << whereColumn << " = " << whereValue << ".\n";
+    tableIndex(table, numOfRows, numOfCols); // display updated table
 }
