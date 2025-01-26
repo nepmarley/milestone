@@ -23,13 +23,13 @@ int main() {
 
     do {
         // Display menu options
-        cout << "\nChoose an option:\n";
-        cout << "1. Read from a file\n";
-        cout << "2. Create a new table\n";
+        cout << "\nChoose an option from below:\n";
+        cout << "1. Read from file\n";
+        cout << "2. Create new table\n";
         cout << "3. Execute SQL-like command\n";
         cout << "Enter your choice: ";
         cin >> choice;
-        cin.ignore();
+        cin.ignore();//clear buffer
 
         switch (choice) {
             case 1:
@@ -40,7 +40,7 @@ int main() {
                 break;
             case 3: {
                 string command;
-                cout << "Enter SQL-like command (e.g., CREATE DATABASE <filename>):\n";
+                cout << "Select the SQL-like command (e.g., CREATE DATABASE <filename>):\n";
                 getline(cin, command);
                 processSQLCommand(command);
                 break;
@@ -50,11 +50,11 @@ int main() {
                 break;
         }
 
-        cout << "Do you want to continue? (1 - Yes, 2 - No): ";
+        cout << "Do you want to continue? (1 - Yes, 2 - No): "; //asks user if they want to proceed
         cin >> choice;
-        cin.ignore();
+        cin.ignore(); //clear buffer as cin and getline are both used
 
-    } while (choice == 1);
+    } while (choice == 1); //runs as long as choice = 1
 
     return 0;
 }
@@ -77,14 +77,14 @@ void tableIndex(const vector<string> &table, int Rows, int Cols) {
 
 // Function to create a new table
 void createTable() {
-    table.clear();
+    table.clear(); //clears data
     numOfRows = 0;
     numOfCols = 0;
 
     cout << "Enter the number of columns: ";
     cin >> numOfCols;
 
-    cout << "Enter column names (comma-separated): ";
+    cout << "Enter column names (separated by commas): ";
     cin.ignore();
     string columnNames;
     getline(cin, columnNames);
@@ -103,14 +103,14 @@ void createTable() {
         return;
     }
 
-    numOfRows++;
-    cout << "Table created successfully with " << numOfCols << " columns.\n";
+    numOfRows++;//increment
+    cout << "Table created successfully with " << numOfCols << " columns.\n"; //notifies user that table has been created 
 
     // Display the empty table structure
     cout << "\nTable structure:\n";
     tableIndex(table, 1, numOfCols);
 
-    // Prompt user to add rows to the table
+    // prompts user to add rows to the table
     addRowsToTable();
 
     // Save the table to a file
@@ -140,7 +140,7 @@ void createTable() {
             outputFile << ",";
     }
 
-    outputFile.close();
+    outputFile.close(); 
     cout << "Table saved to " << filename << ".\n";
 }
 
@@ -166,7 +166,7 @@ void addRowsToTable() {
         // Parse the input into individual column values
         while (getline(ss, value, ',')) {
             rowData.push_back(value);
-            colCount++;
+            colCount++;//increment
         }
 
         // Validate that the row matches the column count
@@ -177,10 +177,10 @@ void addRowsToTable() {
 
         // Add the row to the table
         for (const auto &item : rowData) {
-            table.push_back(item);
+            table.push_back(item); //add item to the back of the vector
         }
 
-        numOfRows++;
+        numOfRows++;//increment
     }
 
     // Display the updated table
@@ -211,7 +211,7 @@ void ReadFromFile() {
             if (localCols == 0) {
                 localCols = localTable.size();
             }
-            localRows++;
+            localRows++;//increment
         }
 
         cout << "Table read successfully:\n";
@@ -229,9 +229,9 @@ void processSQLCommand(const string &command) {
     ss >> keyword;
 
     if (keyword == "CREATE") {
-        ss >> keyword;
+        ss >> keyword; //stores "CREATE" into keyword 
         if (keyword == "DATABASE") {
-            ss >> filename;
+            ss >> filename; //stores "DATABASE" into filename
             ofstream outfile(filename);
             if (outfile) {
                 cout << "Database '" << filename << "' created successfully.\n";
