@@ -28,6 +28,7 @@ int main() {
     int continueChoice;
 
     do {
+        // display menu and get input from user for the SQL-like command
         displayMenu();
         string command;
         cout << "Enter SQL-like command: ";
@@ -38,6 +39,7 @@ int main() {
         // Save table to file after every command
         saveTableToFile();
 
+        // allows user to choose if they want to continue
         cout << "Do you want to continue? (1 - Yes, 2 - No): ";
         cin >> continueChoice;
     } while (continueChoice == 1);
@@ -82,6 +84,7 @@ void processSQLCommand(const string &command) {
                 numCols++;
             }
 
+            // informs the user that the table was successfully created
             cout << "Table '" << tableName << "' created with " << numCols << " columns.\n";
         } else {
             cerr << "Invalid CREATE command.\n";
@@ -185,7 +188,7 @@ void processSQLCommand(const string &command) {
             cerr << "Invalid DELETE command.\n";
         }
     } else {
-        cerr << "Unknown command: " << keyword << "\n";
+        cerr << "Unknown command: " << keyword << "\n"; //if command = unknown
     }
 }
 
@@ -203,7 +206,7 @@ void displayTable() {
 // Function to save the table to a file
 void saveTableToFile() {
     if (outputFile.empty()) {
-        outputFile = "output_" + tableName + ".csv";
+        outputFile = "output_" + tableName + ".csv"; //default filename based on table name
     }
 
     ofstream file(outputFile);
