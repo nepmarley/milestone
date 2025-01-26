@@ -95,7 +95,7 @@ void createTable() {
 
     // Add column names to the table
     while (getline(ss, columnName, ',')) {
-        table.push_back(columnName); 
+        table.push_back(columnName);
     }
 
     if (table.size() != numOfCols) {
@@ -105,7 +105,7 @@ void createTable() {
     }
 
     numOfRows++;//increment
-    cout << "Table created successfully with " << numOfCols << " columns.\n"; //notifies user that table has been created 
+    cout << "Table created successfully with " << numOfCols << " columns.\n"; //notifies user that table has been created
 
     // Display the empty table structure
     cout << "\nTable structure:\n";
@@ -132,7 +132,7 @@ void createTable() {
     }
     outputFile << endl;
 
-    // Write table rows
+    // write table rows
     for (int i = numOfCols; i < table.size(); i++) {
         outputFile << table[i];
         if ((i + 1) % numOfCols == 0)
@@ -141,22 +141,22 @@ void createTable() {
             outputFile << ",";
     }
 
-    outputFile.close(); 
+    outputFile.close();
     cout << "Table saved to " << filename << ".\n";
 }
 
-// Function to add rows to the table
+// function to add rows to the table
 void addRowsToTable() {
     cout << "Enter table rows (comma-separated values). Type 'done' to finish.\n";
 
     while (true) {
-        cout << "Enter row " << numOfRows << ": ";
+        cout << "Enter row " << numOfRows + 1 << ": ";
         string input;
-        cin.ignore();
+        cin.ignore();  // clear input buffer
         getline(cin, input);
 
-        if (input == "done") {
-            break; // Stop if user inputs "done"
+        if (input == "done") {  // Check for 'done' to stop row entry
+            break;
         }
 
         stringstream ss(input);
@@ -164,32 +164,32 @@ void addRowsToTable() {
         vector<string> rowData;
         int colCount = 0;
 
-        // Parse the input into individual column values
         while (getline(ss, value, ',')) {
             rowData.push_back(value);
-            colCount++;//increment
+            colCount++;
         }
 
-        // Validate that the row matches the column count
+        // Ensure row matches the number of columns
         if (colCount != numOfCols) {
             cout << "Error: Row must contain exactly " << numOfCols << " values. Try again.\n";
             continue;
         }
 
-        // Add the row to the table
+        // push row to the table
         for (const auto &item : rowData) {
-            table.push_back(item); //add item to the back of the vector
+            table.push_back(item);
         }
 
-        numOfRows++;//increment
+        numOfRows++;  // row increment count
     }
 
-    // Display the updated table
+    // display updated table
     cout << "\nUpdated Table:\n";
     tableIndex(table, numOfRows, numOfCols);
 }
 
-// Function to read the table from a file
+
+// function to read the table from a file
 void ReadFromFile() {
     ifstream inputFile;
     string filename, line;
@@ -225,32 +225,57 @@ void ReadFromFile() {
 // function to process the SQL-like commands
 void processSQLCommand(const string &command) {
     stringstream ss(command);
-    string keyword, filename;
+    string keyword, tableName, whereColumn, whereValue;
 
     ss >> keyword;
 
     if (keyword == "CREATE") {
-        ss >> keyword; //stores "CREATE" into keyword 
+        ss >> keyword;  // stores "DATABASE" into keyword
         if (keyword == "DATABASE") {
-            ss >> filename; //stores "DATABASE" into filename
-            ofstream outfile(filename);
+            ss >> tableName;
+            ofstream outfile(tableName);
             if (outfile) {
-                cout << "Database '" << filename << "' created successfully.\n";
+                cout << "Database '" << tableName << "' created successfully.\n";
                 outfile.close();
             } else {
-                cout << "Error: Could not create database file '" << filename << "'.\n";
+                cout << "Error: Could not create database file '" << tableName << "'.\n";
             }
         } else {
             cout << "Error: Invalid syntax. Did you mean 'CREATE DATABASE'?\n";
         }
-    } else {
+    }
+    else if (keyword == "INSERT") {
+        ss >> keyword;  // stores "INTO"
+        if (keyword == "INTO") {
+            ss >> tableName;  // get table name
+        }
+    }
+    else if (keyword == "SELECT") {
+        ss >> keyword;  // stores "FROM"
+        if (keyword == "FROM") {
+            ss >> tableName;  // Select data logic here
+        }
+    }
+    else if (keyword == "DELETE") {  // add handling for DELETE command
+        ss >> keyword;  // stores "FROM"
+        if (keyword == "FROM") {
+            ss >> tableName;  // Get table name
+            ss >> keyword;  // stores "WHERE"
+            if (keyword == "WHERE") {
+                ss >> whereColumn >> whereValue;
+                deleteRows(whereColumn, whereValue);  // call deleteRows function
+            }
+        }
+    }
+    else {
         cout << "Error: Unknown command.\n";
     }
 }
 
+
 void deleteRows(const string &whereColumn, const string &whereValue) {
     vector<string> updatedTable;
-    int columnIndex = -1; // flag 
+    int columnIndex = -1; // flag
 
     // find index of column where condition will be applied
     for (int i = 0; i < numOfCols; i++) {
@@ -260,31 +285,29 @@ void deleteRows(const string &whereColumn, const string &whereValue) {
         }
     }
 
-    // if column not found output error and return
+    // If column not found, output error and return
     if (columnIndex == -1) {
         cout << "Error: Column '" << whereColumn << "' not found.\n";
         return;
     }
 
     for (int i = numOfCols; i < table.size(); i++) {
-        int rowIndex = (i - numOfCols) / numOfCols; // count row index
-        int colIndex = i % numOfCols; // count column index
+        int rowIndex = (i - numOfCols) / numOfCols;  // Count row index
+        int colIndex = i % numOfCols;  // Count column index
 
         // if column index matches and value matches condition skip row
         if (colIndex == columnIndex && table[i] == whereValue) {
-            continue; 
+            continue;
         }
 
         // else keep item in updated table
         updatedTable.push_back(table[i]);
     }
 
-    // table is updated with the new data
+    // table is updated with new data
     table = updatedTable;
-
-    // recount number of rows using .size vector function
-    numOfRows = table.size() / numOfCols;
+    numOfRows = table.size() / numOfCols;  // recount rows
 
     cout << "Rows deleted successfully where " << whereColumn << " = " << whereValue << ".\n";
-    tableIndex(table, numOfRows, numOfCols); // display updated table
+    tableIndex(table, numOfRows, numOfCols);  // display updated table
 }
