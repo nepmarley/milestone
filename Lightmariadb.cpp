@@ -12,26 +12,6 @@ using namespace std;
 
 using namespace std;
 
-struct Player {
-    string name;
-    int height;
-    int jersey;
-    string position;
-    string idol;
-    string birthstate;
-    string country;
-};
-
-// Function to display the players
-void displayPlayers(const vector<Player>& players) {  // Added the parameter
-    for (int i = 0; i < players.size(); i++) {
-        cout << players[i].name << ", " << players[i].height << ", "
-             << players[i].jersey << ", " << players[i].position << ", "
-             << players[i].idol << ", " << players[i].birthstate << ", "
-             << players[i].country << endl;
-    }
-}
-
 // Function to display the table
 void tableIndex(const vector<string> &table, int Rows, int Cols)
 {
@@ -48,7 +28,42 @@ void tableIndex(const vector<string> &table, int Rows, int Cols)
         cout << endl;
     }
 }
+//
+void writeOutputFile(const string& csvIn, const string& txtOut) {
+    ifstream inputFile(csvIn);
+    ofstream outputFile(txtOut);
 
+    if (!inputFile.is_open()) {
+        cout << "Error opening input CSV file!" << endl;
+        return;
+    }
+    if (!outputFile.is_open()) {
+        cout << "Error opening output text file!" << endl;
+        return;
+    }
+
+    string line;
+    while (getline(inputFile, line)) {
+        outputFile << line << endl;  // Write each line from CSV to text file
+    }
+
+    inputFile.close();
+    outputFile.close();
+
+    cout << "CSV data successfully written to " << txtOut << endl;
+}
+
+int main() {
+    string csvFile = "Players.csv";   // Change this to your CSV file name
+    string outputFile = "output.txt"; // Output text file
+
+    writeOutputFile(csvFile, outputFile);
+
+    return 0;
+}
+
+
+// function to update table 
 void updateTableRow(vector<string> &table, int numOfRows, int numOfCols)
 {
     if (table.empty()) {
@@ -296,25 +311,6 @@ int main()
 {
     int choice;
  // make user chooce between opening a file and creating a new file
-
-    vector<Player> players = {
-    {"Kyrie", 186, 11, "PG", "Iverson", "Kentucky", "USA"},
-    {"Curry", 186, 30, "PG", "Bird", "California", "USA"},
-    {"LeBron", 205, 23, "SF", "Jordan", "Ohio", "USA"},
-    {"Jordan", 198, 23, "SG", "Wilt", "Illinois", "USA"},
-    {"Kawhi", 198, 2, "PF", "Dirk", "Toronto", "Canada"},
-    {"Paul", 196, 13, "SG", "Kobe", "Oklahoma", "USA"},
-    {"Tatum", 199, 11, "SG", "LeBron", "Massachusetts", "USA"},
-    {"Doncic", 196, 3, "SG", "Dirk", "Texas", "USA"},
-    {"Draymond", 197, 4, "PF", "Khabib", "California", "USA"},
-    {"Rose", 187, 4, "PG", "Iverson", "Illinois", "USA"},
-    {"Kobe", 202, 24, "SG", "None", "California", "USA"},
-    {"Harden", 194, 11, "PG", "Allen", "Texas", "USA"},
-    {"Jaylen", 191, 11, "SF", "LeBron", "Massachusetts", "USA"},
-    {"Tyrese", 197, 19, "PG", "Magic", "Indiana", "USA"},
-    {"LaMelo", 201, 3, "PG", "Carmelo", "North Carolina", "USA"},
-    {"Isaiah", 180, 11, "PG", "Bird", "Arizona", "USA"}
-};
     
     do {
     cout << "Choose an option:\n";
@@ -331,9 +327,6 @@ int main()
             break;
         case 2:
             Tabletofile();
-            break;
-        case 3:
-            displayPlayers(players);
             break;
         default:
             cout << "Invalid choice. Exiting program.\n";
