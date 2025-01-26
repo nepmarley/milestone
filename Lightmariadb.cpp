@@ -54,8 +54,8 @@ void writeOutputFile(const string& csvIn, const string& txtOut) {
 }
 
 int main() {
-    string csvFile = "Players.csv";   // Change this to your CSV file name
-    string outputFile = "output.txt"; // Output text file
+    string csvFile = "Players.csv";   
+    string outputFile = "output.txt"; 
 
     writeOutputFile(csvFile, outputFile);
 
