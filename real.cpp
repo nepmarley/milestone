@@ -318,9 +318,20 @@ void processSQLCommand(const string &command) {
         }
         cout << "Rows updated successfully.\n";
     } else if (keyword == "DELETE") {
-        cout << "DELETE is not supported in this implementation.\n";
-    } else {
+        string fromKeyword, whereColumn, whereValue;
+        ss >> fromKeyword >> tableName >> whereColumn;
+        ss.ignore(); // Skip '='
+        ss >> whereValue;
+
+        if (fromKeyword == "FROM") {
+            deleteRows(whereColumn, whereValue);
+        } else {
+            cout << "Invalid DELETE syntax.\n";
+        }
+    }
+    else {
         cout << "Unknown or unsupported command.\n";
     }
 }
 
+}
