@@ -224,8 +224,7 @@ void ReadFromFile() {
 void processSQLCommand(const string &command) {
     stringstream ss(command);
     string keyword;
-
-    ss >> keyword;  // Get the first word (SQL command)
+    ss >> keyword;
 
     if (keyword == "CREATE") {
         ss >> keyword;
@@ -245,12 +244,83 @@ void processSQLCommand(const string &command) {
             } else {
                 cout << "Error: Unable to create database file\n"; //error handling 5
             }
+        } else if (keyword == "TABLE") {
+            ss >> tableName;
+            string columns;
+            getline(ss, columns, '('); // Skip to column definitions
+            getline(ss, columns, ')'); // Extract column definitions
+            stringstream colStream(columns);
+            string col;
+            while (getline(colStream, col, ',')) {
+                table.push_back(col);
+            }
+            numOfCols = table.size(); // Number of columns
+            numOfRows = 1; // First row for column names
+            cout << "Table '" << tableName << "' created successfully with " << numOfCols << " columns.\n";
+            tableIndex(table, numOfRows, numOfCols);
         }
     } else if (keyword == "USE") {
         ss >> databaseName;
         databaseName = databaseName.substr(0, databaseName.find(";")); // Remove ';' if exists
         cout << "Using database: " << databaseName << endl;
+    } else if (keyword == "INSERT") {
+        ss >> keyword;
+        if (keyword == "INTO") {
+            ss >> tableName;
+            string values;
+            getline(ss, values, '('); // Skip to values
+            getline(ss, values, ')'); // Extract values
+            stringstream valueStream(values);
+            string value;
+            vector<string> rowData;
+
+            while (getline(valueStream, value, ',')) {
+                rowData.push_back(value);
+            }
+
+            if (rowData.size() != numOfCols) {
+                cout << "Error: Number of values does not match the number of columns.\n";
+            } else {
+                for (const auto &val : rowData) {
+                    table.push_back(val);
+                }
+                numOfRows++;
+                cout << "Row inserted into table '" << tableName << "' successfully.\n";
+            }
+        }
+    } else if (keyword == "SELECT") {
+        ss >> keyword;
+        if (keyword == "*") {
+            ss >> keyword;
+            if (keyword == "FROM") {
+                ss >> tableName;
+                cout << "Displaying all rows from '" << tableName << "':\n";
+                tableIndex(table, numOfRows, numOfCols);
+            }
+        }
+    } else if (keyword == "UPDATE") {
+        ss >> tableName;
+        string setCol, setValue, whereCol, whereValue;
+        ss >> keyword; // Skip "SET"
+        ss >> setCol;
+        ss.ignore(); // Skip '='
+        ss >> setValue; // Get value to set
+        ss >> keyword; // Skip "WHERE"
+        ss >> whereCol;
+        ss.ignore(); // Skip '='
+        ss >> whereValue; // Get condition value
+
+        for (int i = numOfCols; i < table.size(); i++) {
+            int colIndex = i % numOfCols;
+            if (table[colIndex] == whereCol && table[i] == whereValue) {
+                table[i] = setValue;
+            }
+        }
+        cout << "Rows updated successfully.\n";
+    } else if (keyword == "DELETE") {
+        cout << "DELETE is not supported in this implementation.\n";
     } else {
-        cout << "Unknown or unsupported command.\n"; //error handling 6
+        cout << "Unknown or unsupported command.\n";
     }
 }
+
